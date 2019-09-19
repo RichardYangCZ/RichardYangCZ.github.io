@@ -79,22 +79,20 @@
 
 
 
-<meta name="description" content="事务事务是执行的一系列操作，这些操作作为一个整体进行提交，要么都执行、要么都不执行 事务的4大特性（ACID） 原子性（atomicity）   一个事务是一个不可分割的工作单位，事务中包括的操作要么都做，要么都不做  一致性(consistency)   事务必须是使数据库从一个一致性状态到另一个一致性状态  隔离性（isolation）   一个事务的执行不能被其他事务干扰  持久性（dura">
+<meta name="description" content="简介redis是一个支持持久化的内存数据库，也就是说redis需要经常将内存中的数据同步到磁盘来保证持久化，持久化可以避免因进程退出而造成数据丢失 RDBRDB持久化是把当前进程数据生成快照（.rdb）文件保存到硬盘的过程，有手动触发和自动触发两种方式。 手动触发有save和bgsave两种命令。 save命令：阻塞当前Redis，直到RDB持久化过程完成为止，若内存实例比较大会造成长时间阻塞，线">
 <meta property="og:type" content="article">
-<meta property="og:title" content="分布式事务">
-<meta property="og:url" content="http://yoursite.com/2019/09/13/distribution/transcation/index.html">
+<meta property="og:title" content="redis的持久化">
+<meta property="og:url" content="http://yoursite.com/2019/09/19/middleware/redis-persistenct/index.html">
 <meta property="og:site_name" content="技术博客">
-<meta property="og:description" content="事务事务是执行的一系列操作，这些操作作为一个整体进行提交，要么都执行、要么都不执行 事务的4大特性（ACID） 原子性（atomicity）   一个事务是一个不可分割的工作单位，事务中包括的操作要么都做，要么都不做  一致性(consistency)   事务必须是使数据库从一个一致性状态到另一个一致性状态  隔离性（isolation）   一个事务的执行不能被其他事务干扰  持久性（dura">
+<meta property="og:description" content="简介redis是一个支持持久化的内存数据库，也就是说redis需要经常将内存中的数据同步到磁盘来保证持久化，持久化可以避免因进程退出而造成数据丢失 RDBRDB持久化是把当前进程数据生成快照（.rdb）文件保存到硬盘的过程，有手动触发和自动触发两种方式。 手动触发有save和bgsave两种命令。 save命令：阻塞当前Redis，直到RDB持久化过程完成为止，若内存实例比较大会造成长时间阻塞，线">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://s2.ax1x.com/2019/09/13/nrasv6.png">
-<meta property="og:image" content="https://s2.ax1x.com/2019/09/13/nrabqS.png">
-<meta property="og:image" content="https://s2.ax1x.com/2019/09/13/nraX5j.png">
-<meta property="og:image" content="https://s2.ax1x.com/2019/09/13/nrdMqO.png">
-<meta property="og:updated_time" content="2019-09-13T06:06:43.430Z">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/19/nq5hzd.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/09/19/nqI0k8.png">
+<meta property="og:updated_time" content="2019-09-19T06:54:40.390Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="分布式事务">
-<meta name="twitter:description" content="事务事务是执行的一系列操作，这些操作作为一个整体进行提交，要么都执行、要么都不执行 事务的4大特性（ACID） 原子性（atomicity）   一个事务是一个不可分割的工作单位，事务中包括的操作要么都做，要么都不做  一致性(consistency)   事务必须是使数据库从一个一致性状态到另一个一致性状态  隔离性（isolation）   一个事务的执行不能被其他事务干扰  持久性（dura">
-<meta name="twitter:image" content="https://s2.ax1x.com/2019/09/13/nrasv6.png">
+<meta name="twitter:title" content="redis的持久化">
+<meta name="twitter:description" content="简介redis是一个支持持久化的内存数据库，也就是说redis需要经常将内存中的数据同步到磁盘来保证持久化，持久化可以避免因进程退出而造成数据丢失 RDBRDB持久化是把当前进程数据生成快照（.rdb）文件保存到硬盘的过程，有手动触发和自动触发两种方式。 手动触发有save和bgsave两种命令。 save命令：阻塞当前Redis，直到RDB持久化过程完成为止，若内存实例比较大会造成长时间阻塞，线">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/09/19/nq5hzd.png">
 
 
 
@@ -124,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/09/13/distribution/transcation/">
+  <link rel="canonical" href="http://yoursite.com/2019/09/19/middleware/redis-persistenct/">
 
 
 
 
 
-  <title>分布式事务 | 技术博客</title>
+  <title>redis的持久化 | 技术博客</title>
   
 
 
@@ -237,7 +235,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/13/distribution/transcation/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/19/middleware/redis-persistenct/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="鱼塘里的猫">
@@ -254,7 +252,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">分布式事务</h1>
+          <h1 class="post-title" itemprop="name headline">redis的持久化</h1>
         
 
         <div class="post-meta">
@@ -266,8 +264,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-13T14:06:43+08:00">
-                2019-09-13
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-19T14:54:40+08:00">
+                2019-09-19
               </time>
             
 
@@ -289,8 +287,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/分布式/" itemprop="url" rel="index">
-                    <span itemprop="name">分布式</span>
+                  <a href="/categories/中间件/" itemprop="url" rel="index">
+                    <span itemprop="name">中间件</span>
                   </a>
                 </span>
 
@@ -326,46 +324,28 @@
       
 
       
-        <h3 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h3><p>事务是执行的一系列操作，这些操作作为一个整体进行提交，要么都执行、要么都不执行</p>
-<h3 id="事务的4大特性（ACID）"><a href="#事务的4大特性（ACID）" class="headerlink" title="事务的4大特性（ACID）"></a>事务的4大特性（ACID）</h3><ul>
-<li><p>原子性（atomicity）</p>
-<p>  一个事务是一个不可分割的工作单位，事务中包括的操作要么都做，要么都不做</p>
-</li>
-<li><p>一致性(consistency)</p>
-<p>  事务必须是使数据库从一个一致性状态到另一个一致性状态</p>
-</li>
-<li><p>隔离性（isolation）</p>
-<p>  一个事务的执行不能被其他事务干扰</p>
-</li>
-<li><p>持久性（durability）</p>
-<p>  事务一旦提交，它对数据库中数据的改变应该是永久的</p>
-</li>
-</ul>
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>redis是一个支持持久化的内存数据库，也就是说redis需要经常将内存中的数据同步到磁盘来保证持久化，持久化可以避免因进程退出而造成数据丢失</p>
+<h3 id="RDB"><a href="#RDB" class="headerlink" title="RDB"></a>RDB</h3><p>RDB持久化是把当前进程数据生成快照（.rdb）文件保存到硬盘的过程，有手动触发和自动触发两种方式。</p>
+<p>手动触发有save和bgsave两种命令。</p>
+<p><strong>save命令</strong>：阻塞当前Redis，直到RDB持久化过程完成为止，若内存实例比较大会造成长时间阻塞，<strong>线上不建议使用</strong>。<br><strong>bgsave命令</strong>：redis进程执行fork操作创建子进程，由子进程完成持久化，阻塞时间很短。</p>
+<h3 id="RDB的优点与缺点"><a href="#RDB的优点与缺点" class="headerlink" title="RDB的优点与缺点"></a>RDB的优点与缺点</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><p>压缩后是二进制文件，适用于备份、全量复制，用于灾难恢复。加载RDB恢复数据快于AOF方式</p>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li>无法做到实时持久化，每次都要创建子进程，成本较高</li>
+<li>保存后的二进制文件，会存在新老版本的兼容问题</li>
+</ol>
 <a id="more"></a>
 
-<h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><p>   一个事务包含多个操作，多个操作操作了多个数据源，这样的事务称为分布式事务</p>
-<h3 id="分布式事务的管理"><a href="#分布式事务的管理" class="headerlink" title="分布式事务的管理"></a>分布式事务的管理</h3><p> 1.协调各数据源提交、回滚，及应对通信异常的管理机制。</p>
-<p> 2.数据源需要支持这种机制</p>
-<p> 3.应对应用故障恢复的机制</p>
-<p> <img src="https://s2.ax1x.com/2019/09/13/nrasv6.png" alt="nrasv6.png"></p>
-<h3 id="分布式事务协议"><a href="#分布式事务协议" class="headerlink" title="分布式事务协议"></a>分布式事务协议</h3><ul>
-<li><p>XA规范</p>
-<p> XA是定义的交易中间件与数据库之间的接口规范，交易中间件用它来通知数据库事务的开始、结束以及提交、回滚等。</p>
-</li>
-</ul>
-<ul>
-<li>两阶段提交协议P2C</li>
-</ul>
-<h3 id="XA-流程"><a href="#XA-流程" class="headerlink" title="XA-流程"></a>XA-流程</h3><p> <img src="https://s2.ax1x.com/2019/09/13/nrabqS.png" alt="nrabqS.png"></p>
-<h3 id="两阶段提交流程"><a href="#两阶段提交流程" class="headerlink" title="两阶段提交流程"></a>两阶段提交流程</h3><p><img src="https://s2.ax1x.com/2019/09/13/nraX5j.png" alt="nraX5j.png"></p>
-<h3 id="分布式事务解决方案"><a href="#分布式事务解决方案" class="headerlink" title="分布式事务解决方案"></a>分布式事务解决方案</h3><ul>
-<li>2PC</li>
-<li>TCC-最终一致性</li>
-<li>本地消息表（异步消息表）-最终一致性</li>
-<li>MQ事务消息</li>
-</ul>
-<h3 id="TCC-分布式事务（补偿事务）"><a href="#TCC-分布式事务（补偿事务）" class="headerlink" title="TCC 分布式事务（补偿事务）"></a>TCC 分布式事务（补偿事务）</h3><p>TCC其实就是采用的补偿机制，其核心思想是：针对每个操作，都要注册一个与其对应的确认和补偿操作。它分为三个阶段：</p>
-<p><img src="https://s2.ax1x.com/2019/09/13/nrdMqO.png" alt="nrdMqO.png"></p>
+<h3 id="AOF"><a href="#AOF" class="headerlink" title="AOF"></a>AOF</h3><p>使用AOF持久化后，每当Redis执行一个改变数据集的命令时，这个命令就会被追加到AOF文件的末尾。这样的话，当Redis重启的时候，程序就可以通过重新执行AOF文件中的命令来达到重建数据集的目的。</p>
+<p><img src="https://s2.ax1x.com/2019/09/19/nq5hzd.png" alt="nq5hzd.png"></p>
+<h3 id="AOF的优缺点"><a href="#AOF的优缺点" class="headerlink" title="AOF的优缺点"></a>AOF的优缺点</h3><h4 id="AOF的优点"><a href="#AOF的优点" class="headerlink" title="AOF的优点"></a>AOF的优点</h4><p>1.使用AOF 会让你的Redis更加耐久: 你可以使用不同的fsync策略：无fsync，每秒fsync，每次写的时候fsync。使用默认的每秒fsync策略，Redis的性能依然很好(fsync是由后台线程进行处理的，主线程会尽力处理客户端请求)，一旦出现故障，你最多丢失1秒的数据。</p>
+<p>2.AOF文件是一个只进行追加的日志文件，即使由于某些原因(磁盘空间已满，写的过程中宕机等等)未执行完整的写入命令，你也也可使用redis-check-aof工具修复这些问题。</p>
+<p>3.Redis 可以在 AOF 文件体积变得过大时，自动地在后台对 AOF 进行重写： 重写后的新 AOF 文件包含了恢复当前数据集所需的最小命令集合。 整个重写操作是绝对安全的，因为 Redis 在创建新 AOF 文件的过程中，会继续将命令追加到现有的 AOF 文件里面，即使重写过程中发生停机，现有的 AOF 文件也不会丢失。 而一旦新 AOF 文件创建完毕，Redis 就会从旧 AOF 文件切换到新 AOF 文件，并开始对新 AOF 文件进行追加操作。</p>
+<p>4.AOF 文件有序地保存了对数据库执行的所有写入操作， 这些写入操作以 Redis 协议的格式保存， 因此 AOF 文件的内容非常容易被人读懂， 对文件进行分析（parse）也很轻松。 导出（export） AOF 文件也非常简单： 举个例子， 如果你不小心执行了 FLUSHALL 命令， 但只要 AOF 文件未被重写， 那么只要停止服务器， 移除 AOF 文件末尾的 FLUSHALL 命令， 并重启 Redis ， 就可以将数据集恢复到 FLUSHALL 执行之前的状态。</p>
+<h4 id="AOF的缺点"><a href="#AOF的缺点" class="headerlink" title="AOF的缺点"></a>AOF的缺点</h4><ol>
+<li>对于相同的数据集来说，AOF 文件的体积通常要大于 RDB 文件的体积</li>
+<li>根据所使用的 fsync 策略，AOF 的速度可能会慢于 RDB 。 在一般情况下， 每秒 fsync 的性能依然非常高。</li>
+</ol>
+<p><img src="https://s2.ax1x.com/2019/09/19/nqI0k8.png" alt="nqI0k8.png"></p>
 
       
     </div>
@@ -390,8 +370,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/09/06/algorithm/quick-sort/" rel="next" title="快速排序">
-                <i class="fa fa-chevron-left"></i> 快速排序
+              <a href="/2019/09/13/distribution/transcation/" rel="next" title="分布式事务">
+                <i class="fa fa-chevron-left"></i> 分布式事务
               </a>
             
           </div>
@@ -399,10 +379,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/19/middleware/redis-persistenct/" rel="prev" title="redis的持久化">
-                redis的持久化 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -527,7 +503,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#事务"><span class="nav-number">1.</span> <span class="nav-text">事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#事务的4大特性（ACID）"><span class="nav-number">2.</span> <span class="nav-text">事务的4大特性（ACID）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式事务"><span class="nav-number">3.</span> <span class="nav-text">分布式事务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式事务的管理"><span class="nav-number">4.</span> <span class="nav-text">分布式事务的管理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式事务协议"><span class="nav-number">5.</span> <span class="nav-text">分布式事务协议</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#XA-流程"><span class="nav-number">6.</span> <span class="nav-text">XA-流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#两阶段提交流程"><span class="nav-number">7.</span> <span class="nav-text">两阶段提交流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分布式事务解决方案"><span class="nav-number">8.</span> <span class="nav-text">分布式事务解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TCC-分布式事务（补偿事务）"><span class="nav-number">9.</span> <span class="nav-text">TCC 分布式事务（补偿事务）</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB"><span class="nav-number">2.</span> <span class="nav-text">RDB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RDB的优点与缺点"><span class="nav-number">3.</span> <span class="nav-text">RDB的优点与缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#优点"><span class="nav-number">3.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#缺点"><span class="nav-number">3.2.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF"><span class="nav-number">4.</span> <span class="nav-text">AOF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AOF的优缺点"><span class="nav-number">5.</span> <span class="nav-text">AOF的优缺点</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF的优点"><span class="nav-number">5.1.</span> <span class="nav-text">AOF的优点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF的缺点"><span class="nav-number">5.2.</span> <span class="nav-text">AOF的缺点</span></a></li></ol></li></ol></div>
             
 
           </div>
