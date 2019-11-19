@@ -79,20 +79,17 @@
 
 
 
-<meta name="description" content="不配置@Configuration当内部方法bean发生彼此依赖的时候会导致多例，如下图所示  当加载UserService bean 的时候，如果没有配置@Configuration的话，会调用两次new MyService生成两个实例 配置@Configuration当使用@Configuration的时候运行的结果如下图所示  可以看到当使用@Configuration注解的时候，两次调用返">
+<meta name="description" content="注解形式的bean注入的方式 @ComponentScan(basePackage)+@Component @Import，@ImportResource 基于方法Bean的@Bean方式  注册的整体流程IOC容器启动的时候先注册注解相关的后置处理器(ConfigurationClassPostProcessor) =&amp;gt;获得相应的实例 =&amp;gt;通过后置处理器实例解析注解 =&amp;gt;首先解">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Configuration注解的使用">
-<meta property="og:url" content="http://yoursite.com/2019/10/23/spring/configuration/index.html">
+<meta property="og:title" content="基于java注解实现bean注册的源码分析">
+<meta property="og:url" content="http://yoursite.com/2019/11/19/spring/ioc_config_source_analysis/index.html">
 <meta property="og:site_name" content="技术博客">
-<meta property="og:description" content="不配置@Configuration当内部方法bean发生彼此依赖的时候会导致多例，如下图所示  当加载UserService bean 的时候，如果没有配置@Configuration的话，会调用两次new MyService生成两个实例 配置@Configuration当使用@Configuration的时候运行的结果如下图所示  可以看到当使用@Configuration注解的时候，两次调用返">
+<meta property="og:description" content="注解形式的bean注入的方式 @ComponentScan(basePackage)+@Component @Import，@ImportResource 基于方法Bean的@Bean方式  注册的整体流程IOC容器启动的时候先注册注解相关的后置处理器(ConfigurationClassPostProcessor) =&amp;gt;获得相应的实例 =&amp;gt;通过后置处理器实例解析注解 =&amp;gt;首先解">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://s2.ax1x.com/2019/10/14/KS7Eiq.png">
-<meta property="og:image" content="https://s2.ax1x.com/2019/10/14/KS7ROg.png">
-<meta property="og:updated_time" content="2019-10-23T02:17:59.991Z">
+<meta property="og:updated_time" content="2019-11-19T01:59:21.893Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Configuration注解的使用">
-<meta name="twitter:description" content="不配置@Configuration当内部方法bean发生彼此依赖的时候会导致多例，如下图所示  当加载UserService bean 的时候，如果没有配置@Configuration的话，会调用两次new MyService生成两个实例 配置@Configuration当使用@Configuration的时候运行的结果如下图所示  可以看到当使用@Configuration注解的时候，两次调用返">
-<meta name="twitter:image" content="https://s2.ax1x.com/2019/10/14/KS7Eiq.png">
+<meta name="twitter:title" content="基于java注解实现bean注册的源码分析">
+<meta name="twitter:description" content="注解形式的bean注入的方式 @ComponentScan(basePackage)+@Component @Import，@ImportResource 基于方法Bean的@Bean方式  注册的整体流程IOC容器启动的时候先注册注解相关的后置处理器(ConfigurationClassPostProcessor) =&amp;gt;获得相应的实例 =&amp;gt;通过后置处理器实例解析注解 =&amp;gt;首先解">
 
 
 
@@ -122,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/10/23/spring/configuration/">
+  <link rel="canonical" href="http://yoursite.com/2019/11/19/spring/ioc_config_source_analysis/">
 
 
 
 
 
-  <title>Configuration注解的使用 | 技术博客</title>
+  <title>基于java注解实现bean注册的源码分析 | 技术博客</title>
   
 
 
@@ -235,7 +232,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/10/23/spring/configuration/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/19/spring/ioc_config_source_analysis/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="鱼塘里的猫">
@@ -252,7 +249,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Configuration注解的使用</h1>
+          <h1 class="post-title" itemprop="name headline">基于java注解实现bean注册的源码分析</h1>
         
 
         <div class="post-meta">
@@ -264,8 +261,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-23T10:17:59+08:00">
-                2019-10-23
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-19T09:59:21+08:00">
+                2019-11-19
               </time>
             
 
@@ -324,12 +321,23 @@
       
 
       
-        <h3 id="不配置-Configuration"><a href="#不配置-Configuration" class="headerlink" title="不配置@Configuration"></a>不配置@Configuration</h3><p>当内部方法bean发生彼此依赖的时候会导致多例，如下图所示</p>
-<p><img src="https://s2.ax1x.com/2019/10/14/KS7Eiq.png" alt="KS7Eiq.png"></p>
-<p>当加载UserService bean 的时候，如果没有配置@Configuration的话，会调用两次new MyService生成两个实例</p>
-<h3 id="配置-Configuration"><a href="#配置-Configuration" class="headerlink" title="配置@Configuration"></a>配置@Configuration</h3><p>当使用@Configuration的时候运行的结果如下图所示</p>
-<p><img src="https://s2.ax1x.com/2019/10/14/KS7ROg.png" alt="KS7ROg.png"></p>
-<p>可以看到当使用@Configuration注解的时候，两次调用返回的是同一个实例。<br>这是当使用@Configuration的时候，经过debug调试可以看到@Configuration将配置的类代理成了一个cglib代理对象，每次通过getBean的方式从容器中进行获取，而容器中的对象是单例的，所以返回的实例对象是同一个。</p>
+        <h3 id="注解形式的bean注入的方式"><a href="#注解形式的bean注入的方式" class="headerlink" title="注解形式的bean注入的方式"></a>注解形式的bean注入的方式</h3><ul>
+<li>@ComponentScan(basePackage)+@Component</li>
+<li>@Import，@ImportResource</li>
+<li>基于方法Bean的@Bean方式</li>
+</ul>
+<h3 id="注册的整体流程"><a href="#注册的整体流程" class="headerlink" title="注册的整体流程"></a>注册的整体流程</h3><p>IOC容器启动的时候先注册注解相关的后置处理器(ConfigurationClassPostProcessor)</p>
+<p>=&gt;获得相应的实例</p>
+<p>=&gt;通过后置处理器实例解析注解</p>
+<p>=&gt;首先解析ComponentScan注解</p>
+<p>=&gt;通过basePackage，根据全类名获得对应的class文件，通过反射获得到标注了@Component注解的文件，进行注册</p>
+<p>=&gt;处理@Import注解</p>
+<p>=&gt;处理@ImportResource注解</p>
+<p>=&gt;处理@Bean方法</p>
+<a id="more"></a> 
+
+<h3 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//启动容器</span></span><br><span class="line">AbstractApplicationContext#refresh</span><br><span class="line"><span class="comment">//注册ConfigurationClassPostProcessor并且实例化</span></span><br><span class="line">&gt;&gt;invokeBeanFactoryPostProcessors(beanFactory);</span><br><span class="line">	&gt;PostProcessorRegistrationDelegate#invokeBeanDefinitionRegistryPostProcessors</span><br><span class="line"></span><br><span class="line"><span class="comment">//解析注解</span></span><br><span class="line">&gt;ConfigurationClassPostProcessor#postProcessBeanDefinitionRegistry</span><br><span class="line"></span><br><span class="line">&gt;ConfigurationClassPostProcessor#processConfigBeanDefinitions</span><br><span class="line"></span><br><span class="line">&gt;&gt;ConfigurationClassUtils.checkConfigurationClassCandidate(beanDef, <span class="keyword">this</span>.metadataReaderFactory) <span class="comment">// 设置配置类属性是full还是lite</span></span><br><span class="line"></span><br><span class="line">&gt;&gt; parser.parse(candidates); <span class="comment">// 解析配置类</span></span><br><span class="line"></span><br><span class="line">&gt;ConfigurationClassParser#parse(Set&lt;BeanDefinitionHolder&gt;)</span><br><span class="line"></span><br><span class="line">&gt;ConfigurationClassParser#parse(AnnotationMetadata, String)</span><br><span class="line"></span><br><span class="line">&gt;&gt; doProcessConfigurationClass(configClass, sourceClass); <span class="comment">// 配置类解析器</span></span><br><span class="line"></span><br><span class="line">&gt;ConfigurationClassParser#doProcessConfigurationClass 将@Component修饰的bean注册到容器</span><br><span class="line"></span><br><span class="line"><span class="comment">// 解析@ComponentScan</span></span><br><span class="line">&gt;&gt; <span class="keyword">this</span>.componentScanParser.parse(componentScan, sourceClass.getMetadata().getClassName());</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt;ComponentScanAnnotationParser#parse</span><br><span class="line"></span><br><span class="line"><span class="comment">// 寻找basePackages属性修饰的class文件</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; ClassPathBeanDefinitionScanner#doScan</span><br><span class="line"></span><br><span class="line"><span class="comment">// 找到被@Component修饰的类</span></span><br><span class="line">&gt;&gt;&gt;&gt; findCandidateCoponents(basePackage);</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt;&gt; registerBeanDefinition(definitionHolder, <span class="keyword">this</span>.registry);</span><br><span class="line"><span class="comment">// 处理@Import</span></span><br><span class="line">&gt;&gt; ConfigurationClassParser#processImports</span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; selector.selectImports(currentSourceClass.getMetadata());</span><br><span class="line"></span><br><span class="line"><span class="comment">// 处理@Bean</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt;ConfigurationClass#addBeanMethod</span><br><span class="line"></span><br><span class="line"><span class="comment">// 回到processConfigBeanDefinitions</span></span><br><span class="line"></span><br><span class="line">&gt;ConfigurationClassPostProcessor#processConfigBeanDefinitions</span><br><span class="line"></span><br><span class="line"><span class="comment">// 注册bean到容器</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; <span class="keyword">this</span>.reader.loadBeanDefinitions(configClasses);</span><br><span class="line"></span><br><span class="line">&gt;&gt;ConfigurationClassBeanDefinitionReader#loadBeanDefinitionsForConfigurationClass</span><br><span class="line"></span><br><span class="line"><span class="comment">// 注册 实现了ImportSelector的bean</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; registerBeanDefinitionForImportedConfigurationClass(configClass);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 方法bean 注册到容器</span></span><br><span class="line"></span><br><span class="line">&gt;&gt;&gt; loadBeanDefinitionsForBeanMethod(beanMethod);</span><br><span class="line"></span><br><span class="line"><span class="comment">// @ImportResource("spring.xml") 配置的bean注册到容器</span></span><br><span class="line"></span><br><span class="line">loadBeanDefinitionsFromImportedResources(configClass.getImportedResources());</span><br><span class="line"></span><br><span class="line"><span class="comment">//实现 ImportBeanDefinitionRegistrar的 bean 注册到容器</span></span><br><span class="line">&gt;&gt;&gt; loadBeanDefinitionsFromRegistrars(configClass.getImportBeanDefinitionRegistrars());</span><br></pre></td></tr></table></figure>
+
 
       
     </div>
@@ -354,8 +362,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/09/25/spring-cloud/introduction/" rel="next" title="微服务简介">
-                <i class="fa fa-chevron-left"></i> 微服务简介
+              <a href="/2019/11/05/spring/aop/" rel="next" title="Spring AOP">
+                <i class="fa fa-chevron-left"></i> Spring AOP
               </a>
             
           </div>
@@ -363,10 +371,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/11/03/spring/transaction/" rel="prev" title="Spring事务">
-                Spring事务 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -491,7 +495,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#不配置-Configuration"><span class="nav-number">1.</span> <span class="nav-text">不配置@Configuration</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置-Configuration"><span class="nav-number">2.</span> <span class="nav-text">配置@Configuration</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#注解形式的bean注入的方式"><span class="nav-number">1.</span> <span class="nav-text">注解形式的bean注入的方式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注册的整体流程"><span class="nav-number">2.</span> <span class="nav-text">注册的整体流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源码分析"><span class="nav-number">3.</span> <span class="nav-text">源码分析</span></a></li></ol></div>
             
 
           </div>
