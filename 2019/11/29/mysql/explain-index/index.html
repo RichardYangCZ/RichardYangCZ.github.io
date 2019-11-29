@@ -88,7 +88,7 @@
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://s2.ax1x.com/2019/11/28/QiobAf.md.png">
 <meta property="og:image" content="https://s2.ax1x.com/2019/11/29/QkKS8x.md.png">
-<meta property="og:updated_time" content="2019-11-29T02:23:43.587Z">
+<meta property="og:updated_time" content="2019-11-29T02:25:17.488Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="EXPLAIN执行计划和索引最佳实践">
 <meta name="twitter:description" content="EXPLAIN执行计划使用EXPLAIN关键字可以模拟优化器执行SQL语句，从而知道MySQL是如何处理你的SQL语句的，分析你的查询语句或者表结构的性能瓶颈。 语法： EXPLAIN + SQL语句 EXPLAIN中的列idid列的编号是select的序号，有几个select就有几个id,并且id的顺序是按select出现的顺序增长的。MySQL将select查询分为简单查询（SIMPLE）和复">
@@ -344,6 +344,8 @@
 <li>derived</li>
 </ul>
 <p>包含在from子句中的子查询。MySQL会将结果存放在一个临时表中，也称为派生  </p>
+<a id="more"></a>
+
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select (select 1 from actor where id = 1) from (select * from film where</span><br><span class="line">id = 1) der;</span><br></pre></td></tr></table></figure>
 
 <p><a href="https://imgchr.com/i/QiobAf" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/11/28/QiobAf.md.png" alt="QiobAf.md.png"></a></p>
