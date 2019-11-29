@@ -229,6 +229,202 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/29/mysql/explain-index/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="鱼塘里的猫">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="https://s2.ax1x.com/2019/09/04/nVVFVU.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="技术博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/29/mysql/explain-index/" itemprop="url">EXPLAIN执行计划和索引最佳实践</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-29T00:00:00+08:00">
+                2019-11-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/数据库/" itemprop="url" rel="index">
+                    <span itemprop="name">数据库</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="EXPLAIN执行计划"><a href="#EXPLAIN执行计划" class="headerlink" title="EXPLAIN执行计划"></a>EXPLAIN执行计划</h3><p>使用EXPLAIN关键字可以模拟优化器执行SQL语句，从而知道MySQL是如何处理你的SQL语句的，分析你的查询语句或者表结构的性能瓶颈。</p>
+<p><strong>语法： EXPLAIN + SQL语句</strong></p>
+<h3 id="EXPLAIN中的列"><a href="#EXPLAIN中的列" class="headerlink" title="EXPLAIN中的列"></a>EXPLAIN中的列</h3><h4 id="id"><a href="#id" class="headerlink" title="id"></a>id</h4><p>id列的编号是select的序号，有几个select就有几个id,并且id的顺序是按select出现的顺序增长的。MySQL将select查询分为简单查询（SIMPLE）和复杂查询（PRIMARY）。复杂查询分为三类：简单子查询、派生表（from语句中的子查询）、union查询。id列越大执行优先级越高，id相同则从上往下执行，id为NULL最后执行</p>
+<h4 id="select-type"><a href="#select-type" class="headerlink" title="select_type"></a>select_type</h4><p>select_type表示对应的行是简单还是复杂的查询，如果是复杂的查询，又是上述三种中的哪一种。</p>
+<ul>
+<li>simple</li>
+</ul>
+<p>简单查询(查询不包含子查询和union)</p>
+<ul>
+<li>primary</li>
+</ul>
+<p>复杂查询中最外层的select</p>
+<ul>
+<li>subquery</li>
+</ul>
+<p>包含在select中的子查询（不在from子句中）</p>
+<ul>
+<li>derived</li>
+</ul>
+<p>包含在from子句中的子查询。MySQL会将结果存放在一个临时表中，也称为派生  </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">explain select (select 1 from actor where id = 1) from (select * from film where</span><br><span class="line">id = 1) der;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://imgchr.com/i/QiobAf" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/11/28/QiobAf.md.png" alt="QiobAf.md.png"></a></p>
+<ul>
+<li>union</li>
+</ul>
+<p>表的连接</p>
+<h4 id="table"><a href="#table" class="headerlink" title="table"></a>table</h4><p>这一列表示explain的一行正在访问哪个表</p>
+<h4 id="type列"><a href="#type列" class="headerlink" title="type列"></a>type列</h4><p>这一列表示关联类型或访问类型，即MySQL决定如何查找表中的行</p>
+<p><strong>system &gt; const &gt; eq_ref &gt; ref &gt; range &gt; index &gt; ALL</strong></p>
+<h4 id="key"><a href="#key" class="headerlink" title="key"></a>key</h4><p>这一列显示mysql实际采用哪个索引来优化对该表的访问</p>
+<h4 id="extra列"><a href="#extra列" class="headerlink" title="extra列"></a>extra列</h4><p>这一列显示的是额外信息。常见的值如下：</p>
+<p><strong>UsingIndex:</strong></p>
+<p>查询的类被索引覆盖</p>
+<p><strong>UsingWhere:</strong></p>
+<p>查询的类未被索引覆盖，where筛选条件非索引的前导列（全表扫描）</p>
+<p><strong>UsingIndexUsingWhere:</strong></p>
+<p>查询的列未被索引覆盖，并且where筛选条件是索引列之一但是不是索引的前导列，意味着无法直接通过索引查找来查询到符合</p>
+<p><strong>NULL:</strong></p>
+<p>查询的列未被索引覆盖，并且where筛选条件是索引的前导列，意味着用到了索引，但是部分字段未被索引覆盖，必须通过“回表”来实现。</p>
+<p><strong>Using Index condition:</strong></p>
+<p>与Using Where类似，查询的列不完全被索引覆盖，where条件中是一个前导类的范围</p>
+<p><strong>Using temporary:</strong></p>
+<p>mysql需要创建一张临时表来处理查询。出现这种情况一般是需要优化的。</p>
+<p><strong>Using fileSort</strong></p>
+<p>mysql会对结果使用一个外部索引排序，而不是按照索引次序从表里读取行。</p>
+<h3 id="索引最佳实践"><a href="#索引最佳实践" class="headerlink" title="索引最佳实践"></a>索引最佳实践</h3><h4 id="使用的表"><a href="#使用的表" class="headerlink" title="使用的表"></a>使用的表</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> <span class="string">`employees`</span> (</span><br><span class="line"><span class="string">`id`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</span><br><span class="line"><span class="string">`name`</span> <span class="built_in">varchar</span>(<span class="number">24</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'姓名'</span>,</span><br><span class="line"><span class="string">`age`</span> <span class="built_in">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">'0'</span> <span class="keyword">COMMENT</span> <span class="string">'年龄'</span>,</span><br><span class="line"><span class="string">`position`</span> <span class="built_in">varchar</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">''</span> <span class="keyword">COMMENT</span> <span class="string">'职位'</span>,</span><br><span class="line"><span class="string">`hire_time`</span> <span class="built_in">timestamp</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="keyword">CURRENT_TIMESTAMP</span> <span class="keyword">COMMENT</span> <span class="string">'入职时间'</span>, PRIMARY <span class="keyword">KEY</span> (<span class="string">`id`</span>),</span><br><span class="line"><span class="keyword">KEY</span> <span class="string">`idx_name_age_position`</span> (<span class="string">`name`</span>,<span class="string">`age`</span>,<span class="string">`position`</span>) <span class="keyword">USING</span> BTREE</span><br><span class="line">)  <span class="keyword">DEFAULT</span> <span class="keyword">CHARSET</span>=utf8 <span class="keyword">COMMENT</span>=<span class="string">'员工记录表'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> employees(<span class="keyword">name</span>,age,<span class="keyword">position</span>,hire_time) <span class="keyword">VALUES</span>(<span class="string">'LiLei'</span>,<span class="number">22</span>,<span class="string">'manager'</span>,<span class="keyword">NOW</span>());</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> employees(<span class="keyword">name</span>,age,<span class="keyword">position</span>,hire_time) <span class="keyword">VALUES</span>(<span class="string">'HanMeimei'</span>,<span class="number">23</span>,<span class="string">'dev'</span>,<span class="keyword">NOW</span>());</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> employees(<span class="keyword">name</span>,age,<span class="keyword">position</span>,hire_time) <span class="keyword">VALUES</span>(<span class="string">'Lucy'</span>,<span class="number">23</span>,<span class="string">'dev'</span>,<span class="keyword">NOW</span>());</span><br></pre></td></tr></table></figure>
+
+<h4 id="最佳实践"><a href="#最佳实践" class="headerlink" title="最佳实践"></a>最佳实践</h4><h5 id="全值匹配"><a href="#全值匹配" class="headerlink" title="全值匹配"></a>全值匹配</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN SELECT * FROM employees WHERE name= &apos;LiLei&apos;;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://imgchr.com/i/QkKS8x" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/11/29/QkKS8x.md.png" alt="QkKS8x.md.png"></a></p>
+<h5 id="最左前缀法则"><a href="#最左前缀法则" class="headerlink" title="最左前缀法则"></a>最左前缀法则</h5><p>如果索引了多列，要遵循最左前缀法则。指的是查询从索引的最左前列开始并且不跳过索引中的列</p>
+<h5 id="不要在索引列上做任何操作，会导致导致索引失效而转向全表扫描"><a href="#不要在索引列上做任何操作，会导致导致索引失效而转向全表扫描" class="headerlink" title="不要在索引列上做任何操作，会导致导致索引失效而转向全表扫描"></a>不要在索引列上做任何操作，会导致导致索引失效而转向全表扫描</h5><h5 id="存储引擎不能使用索引中范围条件右边的列"><a href="#存储引擎不能使用索引中范围条件右边的列" class="headerlink" title="存储引擎不能使用索引中范围条件右边的列"></a>存储引擎不能使用索引中范围条件右边的列</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN SELECT * FROM employees WHERE name= &apos;LiLei&apos; AND age &gt; 22 AND position</span><br><span class="line">=&apos;manager&apos;;</span><br></pre></td></tr></table></figure>
+
+<p>这里的position用不上索引</p>
+<h5 id="mysql-在使用不等于的时候无法使用索引会导致全表扫描"><a href="#mysql-在使用不等于的时候无法使用索引会导致全表扫描" class="headerlink" title="mysql 在使用不等于的时候无法使用索引会导致全表扫描"></a>mysql 在使用不等于的时候无法使用索引会导致全表扫描</h5><h5 id="like以通配符开头mysql索引失效会变成全表扫描"><a href="#like以通配符开头mysql索引失效会变成全表扫描" class="headerlink" title="like以通配符开头mysql索引失效会变成全表扫描"></a>like以通配符开头mysql索引失效会变成全表扫描</h5><h5 id="字符串不加单引号索引失效"><a href="#字符串不加单引号索引失效" class="headerlink" title="字符串不加单引号索引失效"></a>字符串不加单引号索引失效</h5><h5 id="少用or-用它连接时很多情况下索引会失效"><a href="#少用or-用它连接时很多情况下索引会失效" class="headerlink" title="少用or,用它连接时很多情况下索引会失效"></a>少用or,用它连接时很多情况下索引会失效</h5>
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/23/spring/spring-ioc-impl/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1639,155 +1835,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/06/algorithm/quick-sort/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="鱼塘里的猫">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="https://s2.ax1x.com/2019/09/04/nVVFVU.png">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="技术博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/09/06/algorithm/quick-sort/" itemprop="url">快速排序</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-06T11:20:24+08:00">
-                2019-09-06
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>假设我们现在需要对 6 1 2 7 9 3 4 5 10 8 这10个数进行排序。首先在这个序列中随便找一个数作为 <strong>基准数</strong> 。为了方便，我们一般选择第一个数，即为6。接下来，需要将这个序列中所有比基准数大的数放在6的右边，比基准数小的数放在6的左边。</p>
-<p><strong>步骤如下：</strong></p>
-<p>分别从初始序列的两端进行遍历，从右往左找一个小于6的数，再从左往右找一个大于6的数，然后交换它们。这里可以用两个变量i和j，分别指向序列最左边和最右边，命名为哨兵i和哨兵j。刚开始的时候让哨兵i指向序列的最左边（即i=0），哨兵j指向序列的最右边（即j=9）。</p>
-<p><img src="https://s2.ax1x.com/2019/09/06/nKF0KA.png" alt="nKF0KA.png"></p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/09/06/algorithm/quick-sort/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1840,7 +1887,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1851,7 +1898,7 @@
               
               <div class="site-state-item site-state-categories">
                 
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">分类</span>
                 
               </div>
