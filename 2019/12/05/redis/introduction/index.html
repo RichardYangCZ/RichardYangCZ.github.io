@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hexo, NexT">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Redis介绍Redis是基于内存并且可持久化的key-value数据库。它的值（value）可以是字符串，哈希，列表，集合和有序集合等类型。 Redis适用场景 存储缓存（常用） 会话session（常用） 分布式锁 排行榜 发布订阅 消息队列  Redis快速开始安装1234wget http://download.redis.io/releases/redis-5.0.5.tar.gztar">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis简介">
+<meta property="og:url" content="http://yoursite.com/2019/12/05/redis/introduction/index.html">
+<meta property="og:site_name" content="技术博客">
+<meta property="og:description" content="Redis介绍Redis是基于内存并且可持久化的key-value数据库。它的值（value）可以是字符串，哈希，列表，集合和有序集合等类型。 Redis适用场景 存储缓存（常用） 会话session（常用） 分布式锁 排行榜 发布订阅 消息队列  Redis快速开始安装1234wget http://download.redis.io/releases/redis-5.0.5.tar.gztar">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-12-03T10:28:59.615Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis简介">
+<meta name="twitter:description" content="Redis介绍Redis是基于内存并且可持久化的key-value数据库。它的值（value）可以是字符串，哈希，列表，集合和有序集合等类型。 Redis适用场景 存储缓存（常用） 会话session（常用） 分布式锁 排行榜 发布订阅 消息队列  Redis快速开始安装1234wget http://download.redis.io/releases/redis-5.0.5.tar.gztar">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/12/05/redis/introduction/">
+
+
+
+
+
+  <title>Redis简介 | 技术博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">技术博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/05/redis/introduction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="鱼塘里的猫">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="https://s2.ax1x.com/2019/09/04/nVVFVU.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="技术博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Redis简介</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-05T00:00:00+08:00">
+                2019-12-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="Redis介绍"><a href="#Redis介绍" class="headerlink" title="Redis介绍"></a>Redis介绍</h3><p>Redis是基于内存并且可持久化的key-value数据库。它的值（value）可以是字符串，哈希，列表，集合和有序集合等类型。</p>
+<h3 id="Redis适用场景"><a href="#Redis适用场景" class="headerlink" title="Redis适用场景"></a>Redis适用场景</h3><ul>
+<li>存储缓存（常用）</li>
+<li>会话session（常用）</li>
+<li>分布式锁</li>
+<li>排行榜</li>
+<li>发布订阅</li>
+<li>消息队列</li>
+</ul>
+<h3 id="Redis快速开始"><a href="#Redis快速开始" class="headerlink" title="Redis快速开始"></a>Redis快速开始</h3><h4 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-5.0.5.tar.gz</span><br><span class="line">tar xzf redis-5.0.5.tar.gz</span><br><span class="line">cd redis-5.0.5</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+
+<a id="more"></a>
+
+<h4 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h4><table>
+<thead>
+<tr>
+<th>文件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>redis-server</td>
+<td>启动redis</td>
+</tr>
+<tr>
+<td>redis-cli</td>
+<td>redis命令行客户端</td>
+</tr>
+<tr>
+<td>redis-benchmark</td>
+<td>测试工具</td>
+</tr>
+<tr>
+<td>redis-check-aof</td>
+<td>AOF持久化工具</td>
+</tr>
+<tr>
+<td>redis-check-dump</td>
+<td>DB持久化工具</td>
+</tr>
+<tr>
+<td>redis-sentinel</td>
+<td>哨兵相关</td>
+</tr>
+<tr>
+<td>redis-trib</td>
+<td>Redis Cluster模式管理工具</td>
+</tr>
+<tr>
+<td>redis.conf</td>
+<td>Redis配置文件</td>
+</tr>
+</tbody></table>
+<h3 id="Redis的特性"><a href="#Redis的特性" class="headerlink" title="Redis的特性"></a>Redis的特性</h3><ul>
+<li>数据存在内存中，查询快</li>
+<li>单线程，避免了线程切换的开销</li>
+<li>I/O多路复用</li>
+</ul>
+<h3 id="Redis的日常操作"><a href="#Redis的日常操作" class="headerlink" title="Redis的日常操作"></a>Redis的日常操作</h3><h4 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h4><p><strong>命令 set key value</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">set name monkey ex 20 //设置name为monkey 20s过期</span><br><span class="line"></span><br><span class="line">setnx name monkey //不存在键name时，返回1设置成功；存在的话返回0</span><br><span class="line"></span><br><span class="line">批量设值: mset name monkey sex boy</span><br><span class="line">批量取值：mget name sex</span><br></pre></td></tr></table></figure>
+
+<h4 id="计数器"><a href="#计数器" class="headerlink" title="计数器"></a>计数器</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">incr age  //必须为整数自增1</span><br><span class="line">decr age //整数age减1</span><br><span class="line">incrby age 1 //整数age+1</span><br><span class="line">decrby age 1//整数age-1</span><br></pre></td></tr></table></figure>
+
+<h4 id="Hash类型"><a href="#Hash类型" class="headerlink" title="Hash类型"></a>Hash类型</h4><p>哈希hash是一个string类型的field和value的映射表，<strong>hash特适合用于存储对象</strong></p>
+<p><strong>命令  hset key field value</strong></p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>username</th>
+<th>sex</th>
+<th>age</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>monkey</td>
+<td>boy</td>
+<td>18</td>
+</tr>
+<tr>
+<td>2</td>
+<td>fox</td>
+<td>boy</td>
+<td>19</td>
+</tr>
+</tbody></table>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">设值：hset user:1 name monkey</span><br><span class="line">取值：hget user:1 name</span><br><span class="line">删值：hdel user:1 name</span><br><span class="line">批量设值：hmset user:1 name monkey age 18 sex boy</span><br><span class="line">批量取值：hmget     </span><br><span class="line">获取所有的field: hkeys user:1</span><br><span class="line">获取所有的value: hvals user:1</span><br><span class="line">获取所有的filed与value: hgetall user:1</span><br></pre></td></tr></table></figure>
+
+<h4 id="List集合"><a href="#List集合" class="headerlink" title="List集合"></a>List集合</h4><p>用来存储多个有序的字符串</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">添加命令：</span><br><span class="line">rpush monkey c b a //从右向左插入数据</span><br><span class="line">lpush monkey c b a //从左向右插入数据</span><br><span class="line"></span><br><span class="line">查找命令：</span><br><span class="line">lrange key start end //从左向右查询</span><br></pre></td></tr></table></figure>
+
+<h4 id="Set集合"><a href="#Set集合" class="headerlink" title="Set集合"></a>Set集合</h4><p>特点：不允许存在重复的元素</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">exists user //检查user键值是否存在</span><br><span class="line">sadd user a b c // 向user插入3个元素</span><br><span class="line">sadd user a b c//再插入相同的元素，返回0</span><br><span class="line">smembers user //获取user的所有元素</span><br><span class="line">srem user a //删除元素</span><br><span class="line">scard user //计算元素的个数</span><br></pre></td></tr></table></figure>
+
+<h4 id="Redis的全局命令"><a href="#Redis的全局命令" class="headerlink" title="Redis的全局命令"></a>Redis的全局命令</h4><ul>
+<li>查看所有键： keys *</li>
+<li>键总数： dbsize</li>
+<li>查询键是否存在： exists key</li>
+<li>删除键： del key</li>
+<li>键过期：expire key seconds</li>
+<li>键的数据结构 type key</li>
+<li>清除当前数据库 flushdb</li>
+</ul>
+<h3 id="Redis-的持久化"><a href="#Redis-的持久化" class="headerlink" title="Redis 的持久化"></a>Redis 的持久化</h3><p>作用：redis是一个支持持久化的内存数据库，也就是说redis需要经常将内存中的数据同步到磁盘来保证持久化，持久化可以避免因进程退出而造成数据丢失</p>
+<h4 id="RDB（写数据）"><a href="#RDB（写数据）" class="headerlink" title="RDB（写数据）"></a>RDB（写数据）</h4><p>RDB持久化把当前进程数据生成快照（.rdb）文件保存到硬盘的过程，<strong>有手动触发save和自动触发bgsave命令</strong></p>
+<p>save命令：阻塞当前Redis，直到RDB持久化过程完成为止，若内存实例比较大会造成长时间阻塞，<strong>线上不建议使用</strong></p>
+<p>bgsave命令：redis进程执行fork操作创建子进程，由子进程完成持久化，阻塞时间比较短，是save的优化。</p>
+<h5 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h5><ul>
+<li>压缩后的二进制文件适用于备份、全量复制</li>
+<li>与AOF相比，在恢复大的数据集的时候，RDB方式较快</li>
+</ul>
+<h5 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h5><ul>
+<li>无法做到实时持久化，每次都要创建子进程，频繁操作成本过高</li>
+<li>保存后的二进制文件存在版本兼容问题</li>
+</ul>
+<h4 id="AOF-写命令"><a href="#AOF-写命令" class="headerlink" title="AOF(写命令)"></a>AOF(写命令)</h4><p>打开AOF功能后，每当Redis执行一个改变数据集的命令时，这个命令就被追加到AOF文件的末尾。</p>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>优点</th>
+<th>缺点</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>always</td>
+<td>不丢失数据</td>
+<td>IO开销大</td>
+<td>每次有写命令执行就触发fsync，非常慢，也非常安全</td>
+</tr>
+<tr>
+<td>everysec</td>
+<td>每秒进行fsync，最多丢失一秒数据</td>
+<td>可能丢失一秒数据</td>
+<td>推荐使用，这种策略可以兼顾速度和安全</td>
+</tr>
+<tr>
+<td>no</td>
+<td>不用管</td>
+<td>不可控</td>
+<td>从不fsync,由操作系统决定</td>
+</tr>
+</tbody></table>
+<h5 id="优点-1"><a href="#优点-1" class="headerlink" title="优点"></a>优点</h5><ul>
+<li><p>使用AOF 会让你的Redis更加耐久: 你可以使用不同的fsync策略：无fsync，每秒fsync，每次写的时候fsync。使用默认的每秒fsync策略，Redis的性能依然很好(fsync是由后台线程进行处理的，主线程会尽力处理客户端请求)，一旦出现故障，你最多丢失1秒的数据。</p>
+</li>
+<li><p>AOF文件是一个只进行追加的日志文件，即使由于某些原因(磁盘空间已满，写的过程中宕机等等)未执行完整的写入命令，你也也可使用redis-check-aof工具修复这些问题。</p>
+</li>
+<li><p>Redis 可以在 AOF 文件体积变得过大时，自动地在后台对 AOF 进行重写： 重写后的新 AOF 文件包含了恢复当前数据集所需的最小命令集合。 整个重写操作是绝对安全的，因为 Redis 在创建新 AOF 文件的过程中，会继续将命令追加到现有的 AOF 文件里面，即使重写过程中发生停机，现有的 AOF 文件也不会丢失。 而一旦新 AOF 文件创建完毕，Redis 就会从旧 AOF 文件切换到新 AOF 文件，并开始对新 AOF 文件进行追加操作。</p>
+</li>
+<li><p>AOF 文件有序地保存了对数据库执行的所有写入操作， 这些写入操作以 Redis 协议的格式保存， 因此 AOF 文件的内容非常容易被人读懂， 对文件进行分析（parse）也很轻松。 导出（export） AOF 文件也非常简单： 举个例子， 如果你不小心执行了 FLUSHALL 命令， 但只要 AOF 文件未被重写， 那么只要停止服务器， 移除 AOF 文件末尾的 FLUSHALL 命令， 并重启 Redis ， 就可以将数据集恢复到 FLUSHALL 执行之前的状态。</p>
+</li>
+</ul>
+<h5 id="缺点-1"><a href="#缺点-1" class="headerlink" title="缺点"></a>缺点</h5><ul>
+<li>对于相同的数据集来说，AOF 文件的体积通常要大于 RDB 文件的体积</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/12/04/design-pattern/adapter/" rel="next" title="适配器模式">
+                <i class="fa fa-chevron-left"></i> 适配器模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="https://s2.ax1x.com/2019/09/04/nVVFVU.png" alt="鱼塘里的猫">
+            
+              <p class="site-author-name" itemprop="name">鱼塘里的猫</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                
+              </div>
+            
+
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis介绍"><span class="nav-number">1.</span> <span class="nav-text">Redis介绍</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis适用场景"><span class="nav-number">2.</span> <span class="nav-text">Redis适用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis快速开始"><span class="nav-number">3.</span> <span class="nav-text">Redis快速开始</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#安装"><span class="nav-number">3.1.</span> <span class="nav-text">安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#说明"><span class="nav-number">3.2.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis的特性"><span class="nav-number">4.</span> <span class="nav-text">Redis的特性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis的日常操作"><span class="nav-number">5.</span> <span class="nav-text">Redis的日常操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#字符串"><span class="nav-number">5.1.</span> <span class="nav-text">字符串</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#计数器"><span class="nav-number">5.2.</span> <span class="nav-text">计数器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Hash类型"><span class="nav-number">5.3.</span> <span class="nav-text">Hash类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#List集合"><span class="nav-number">5.4.</span> <span class="nav-text">List集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Set集合"><span class="nav-number">5.5.</span> <span class="nav-text">Set集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Redis的全局命令"><span class="nav-number">5.6.</span> <span class="nav-text">Redis的全局命令</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Redis-的持久化"><span class="nav-number">6.</span> <span class="nav-text">Redis 的持久化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#RDB（写数据）"><span class="nav-number">6.1.</span> <span class="nav-text">RDB（写数据）</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#优点"><span class="nav-number">6.1.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#缺点"><span class="nav-number">6.1.2.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOF-写命令"><span class="nav-number">6.2.</span> <span class="nav-text">AOF(写命令)</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#优点-1"><span class="nav-number">6.2.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#缺点-1"><span class="nav-number">6.2.2.</span> <span class="nav-text">缺点</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">鱼塘里的猫</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
