@@ -79,26 +79,23 @@
 
 
 
-<meta name="description" content="基本思想假设我们现在需要对 6 1 2 7 9 3 4 5 10 8 这10个数进行排序。首先在这个序列中随便找一个数作为 基准数 。为了方便，我们一般选择第一个数，即为6。接下来，需要将这个序列中所有比基准数大的数放在6的右边，比基准数小的数放在6的左边。 步骤如下： 分别从初始序列的两端进行遍历，从右往左找一个小于6的数，再从左往右找一个大于6的数，然后交换它们。这里可以用两个变量i和j，分别">
+<meta name="description" content="环境192.168.0.31 每台服务器1主1从，共3主3从  部署下载Redis1234wget http://download.redis.io/releases/redis-5.0.5.tar.gztar xzf redis-5.0.5.tar.gzcd redis-5.0.5make">
 <meta property="og:type" content="article">
-<meta property="og:title" content="快速排序">
-<meta property="og:url" content="http://yoursite.com/2019/09/06/algorithm/quick-sort/index.html">
+<meta property="og:title" content="Redis集群部署">
+<meta property="og:url" content="http://yoursite.com/2019/12/06/redis/cluster/index.html">
 <meta property="og:site_name" content="技术博客">
-<meta property="og:description" content="基本思想假设我们现在需要对 6 1 2 7 9 3 4 5 10 8 这10个数进行排序。首先在这个序列中随便找一个数作为 基准数 。为了方便，我们一般选择第一个数，即为6。接下来，需要将这个序列中所有比基准数大的数放在6的右边，比基准数小的数放在6的左边。 步骤如下： 分别从初始序列的两端进行遍历，从右往左找一个小于6的数，再从左往右找一个大于6的数，然后交换它们。这里可以用两个变量i和j，分别">
+<meta property="og:description" content="环境192.168.0.31 每台服务器1主1从，共3主3从  部署下载Redis1234wget http://download.redis.io/releases/redis-5.0.5.tar.gztar xzf redis-5.0.5.tar.gzcd redis-5.0.5make">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://s2.ax1x.com/2019/09/06/nKF0KA.png">
-<meta property="og:image" content="https://s2.ax1x.com/2019/09/06/nKkuIf.png">
-<meta property="og:image" content="https://s2.ax1x.com/2019/09/06/nKkBz4.png">
-<meta property="og:image" content="https://s2.ax1x.com/2019/09/06/nKA3tK.png">
-<meta property="og:image" content="https://s2.ax1x.com/2019/09/06/nKA8fO.png">
-<meta property="og:image" content="https://s2.ax1x.com/2019/09/06/nKAbjJ.png">
-<meta property="og:image" content="https://s2.ax1x.com/2019/09/06/nKAOBR.png">
-<meta property="og:image" content="https://s2.ax1x.com/2019/09/06/nKE93D.png">
-<meta property="og:updated_time" content="2019-09-06T03:20:24.553Z">
+<meta property="og:image" content="https://s2.ax1x.com/2019/12/04/QQqazF.md.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/12/04/QQqodI.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/12/04/QQLYmd.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/12/04/QQL6mj.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/12/04/QQLIcF.png">
+<meta property="og:updated_time" content="2019-12-04T02:59:13.178Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="快速排序">
-<meta name="twitter:description" content="基本思想假设我们现在需要对 6 1 2 7 9 3 4 5 10 8 这10个数进行排序。首先在这个序列中随便找一个数作为 基准数 。为了方便，我们一般选择第一个数，即为6。接下来，需要将这个序列中所有比基准数大的数放在6的右边，比基准数小的数放在6的左边。 步骤如下： 分别从初始序列的两端进行遍历，从右往左找一个小于6的数，再从左往右找一个大于6的数，然后交换它们。这里可以用两个变量i和j，分别">
-<meta name="twitter:image" content="https://s2.ax1x.com/2019/09/06/nKF0KA.png">
+<meta name="twitter:title" content="Redis集群部署">
+<meta name="twitter:description" content="环境192.168.0.31 每台服务器1主1从，共3主3从  部署下载Redis1234wget http://download.redis.io/releases/redis-5.0.5.tar.gztar xzf redis-5.0.5.tar.gzcd redis-5.0.5make">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/12/04/QQqazF.md.png">
 
 
 
@@ -128,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/09/06/algorithm/quick-sort/">
+  <link rel="canonical" href="http://yoursite.com/2019/12/06/redis/cluster/">
 
 
 
 
 
-  <title>快速排序 | 技术博客</title>
+  <title>Redis集群部署 | 技术博客</title>
   
 
 
@@ -241,7 +238,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/06/algorithm/quick-sort/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/12/06/redis/cluster/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="鱼塘里的猫">
@@ -258,7 +255,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">快速排序</h1>
+          <h1 class="post-title" itemprop="name headline">Redis集群部署</h1>
         
 
         <div class="post-meta">
@@ -270,8 +267,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-06T11:20:24+08:00">
-                2019-09-06
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-12-06T00:00:00+08:00">
+                2019-12-06
               </time>
             
 
@@ -293,8 +290,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/算法/" itemprop="url" rel="index">
-                    <span itemprop="name">算法</span>
+                  <a href="/categories/Redis/" itemprop="url" rel="index">
+                    <span itemprop="name">Redis</span>
                   </a>
                 </span>
 
@@ -330,30 +327,30 @@
       
 
       
-        <h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>假设我们现在需要对 6 1 2 7 9 3 4 5 10 8 这10个数进行排序。首先在这个序列中随便找一个数作为 <strong>基准数</strong> 。为了方便，我们一般选择第一个数，即为6。接下来，需要将这个序列中所有比基准数大的数放在6的右边，比基准数小的数放在6的左边。</p>
-<p><strong>步骤如下：</strong></p>
-<p>分别从初始序列的两端进行遍历，从右往左找一个小于6的数，再从左往右找一个大于6的数，然后交换它们。这里可以用两个变量i和j，分别指向序列最左边和最右边，命名为哨兵i和哨兵j。刚开始的时候让哨兵i指向序列的最左边（即i=0），哨兵j指向序列的最右边（即j=9）。</p>
-<p><img src="https://s2.ax1x.com/2019/09/06/nKF0KA.png" alt="nKF0KA.png"></p>
+        <h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>192.168.0.31</p>
+<p>每台服务器1主1从，共3主3从</p>
+<p><a href="https://imgse.com/i/QQqazF" target="_blank" rel="noopener"><img src="https://s2.ax1x.com/2019/12/04/QQqazF.md.png" alt="QQqazF.md.png"></a></p>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><h4 id="下载Redis"><a href="#下载Redis" class="headerlink" title="下载Redis"></a>下载Redis</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wget http://download.redis.io/releases/redis-5.0.5.tar.gz</span><br><span class="line">tar xzf redis-5.0.5.tar.gz</span><br><span class="line">cd redis-5.0.5</span><br><span class="line">make</span><br></pre></td></tr></table></figure>
+
 <a id="more"></a>
 
-<p><strong>首先哨兵j开始出动</strong>。哨兵j一步一步地向左挪动（即j–）,直到找到一个小于6的数停下来。接下来哨兵i再一步一步向右挪动（即i++），直到找到一个大于6的数停下来。最后哨兵j停在了数字5面前，哨兵i停在了数字7面前。</p>
-<p><img src="https://s2.ax1x.com/2019/09/06/nKkuIf.png" alt="nKkuIf.png"></p>
-<p>现在交换哨兵i和哨兵j所指向的元素的值。交换后的序列如下：</p>
-<p><img src="https://s2.ax1x.com/2019/09/06/nKkBz4.png" alt="nKkBz4.png"></p>
-<p>到此，第一次交换结束。接下来哨兵j继续向左挪动，它发现了4之后停了下来，哨兵i也继续向右挪动，它发现了9之后停了下来。此时再次进行交换。</p>
-<p><img src="https://s2.ax1x.com/2019/09/06/nKA3tK.png" alt="nKA3tK.png"></p>
-<p>交换之后的序列如下：</p>
-<p><img src="https://s2.ax1x.com/2019/09/06/nKA8fO.png" alt="nKA8fO.png"></p>
-<p>第二次交换结束，哨兵j继续向左挪动，它发现了3之后又停了下来。哨兵i继续向右移动，此时哨兵i和哨兵j相遇，哨兵i和哨兵j都走到了3面前。说明此时”探测”结束。</p>
-<p><img src="https://s2.ax1x.com/2019/09/06/nKAbjJ.png" alt="nKAbjJ.png"></p>
-<p>我们将基准数6和3进行交换。</p>
-<p><img src="https://s2.ax1x.com/2019/09/06/nKAOBR.png" alt="nKAOBR.png"></p>
-<p>交换之后的序列如下:</p>
-<p><img src="https://s2.ax1x.com/2019/09/06/nKE93D.png" alt="nKE93D.png"></p>
-<p>到此第一轮”探测” 结束。此时以基准数6为分界点，6左边的数都小于等于6，右边的数都大于等于6。<strong>回顾一下刚才的过程，其实哨兵j的使命就是要找小于基准数的数，而哨兵i的使命就是要找大于基准数的数，直到i和j碰头为止。</strong></p>
-<p>剩下的任务只需要重复刚才的操作，将6左边的序列按照上述步骤进行排序，6左右的序列按照上述步骤进行排序，最后得到的序列就是一个有序的序列。</p>
-<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span>[] nums, <span class="keyword">int</span> low, <span class="keyword">int</span> high)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (low &lt; high) &#123;</span><br><span class="line">            <span class="keyword">int</span> base = nums[low];</span><br><span class="line">            <span class="keyword">int</span> i = low;</span><br><span class="line">            <span class="keyword">int</span> j = high;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//当i&lt;j的时候一直循环</span></span><br><span class="line">            <span class="keyword">while</span> (i &lt; j) &#123;</span><br><span class="line">                <span class="comment">//从右往左遍历直到找到小于基准数据的下标或者i&gt;=j</span></span><br><span class="line">                <span class="keyword">while</span> (nums[j] &gt;= base &amp;&amp; i &lt; j) &#123;</span><br><span class="line">                    j--;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//从左往右遍历直到找到大于基准数据的下标或者i&gt;j</span></span><br><span class="line">                <span class="keyword">while</span> (nums[i] &lt;= base &amp;&amp; i &lt; j) &#123;</span><br><span class="line">                    i++;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="comment">//交换i和j的数据</span></span><br><span class="line">                <span class="keyword">int</span> temp = nums[i];</span><br><span class="line">                nums[i] = nums[j];</span><br><span class="line">                nums[j] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//遍历完直接交换基准数据和j的数据</span></span><br><span class="line">            nums[low] = nums[j];</span><br><span class="line">            nums[j] = base;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//对左边的数据进行排序</span></span><br><span class="line">            quickSort(nums, low, j - <span class="number">1</span>);</span><br><span class="line">            <span class="comment">//对右边的数据进行排序</span></span><br><span class="line">            quickSort(nums, j + <span class="number">1</span>, high);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>选择一个目录在该目录（/root/redis-cluster）创建6个文件夹，然后把redis.conf这个文件拷贝到这6个目录中</p>
+<p><img src="https://s2.ax1x.com/2019/12/04/QQqodI.png" alt="QQqodI.png"></p>
+<h4 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h4><p>我们以7001为例，其他配置文件类似</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">port 7001 //修改成自己对应的端口</span><br><span class="line">cluster-enabled yes //修改成集群模式</span><br><span class="line">cluster-log-file nodes7001.conf</span><br><span class="line">protected-mode no //保护模式改成no</span><br><span class="line">#bind 127.0.0.1  //注释掉</span><br></pre></td></tr></table></figure>
 
+<h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/redis-5.0.0/src/redis-server /root/redis-cluster/7001/redis.conf</span><br><span class="line">/usr/local/redis-5.0.0/src/redis-server /root/redis-cluster/7002/redis.conf</span><br><span class="line">/usr/local/redis-5.0.0/src/redis-server /root/redis-cluster/7003/redis.conf</span><br><span class="line">/usr/local/redis-5.0.0/src/redis-server /root/redis-cluster/7004/redis.conf</span><br><span class="line">/usr/local/redis-5.0.0/src/redis-server /root/redis-cluster/7005/redis.conf</span><br><span class="line">/usr/local/redis-5.0.0/src/redis-server /root/redis-cluster/7006/redis.conf</span><br></pre></td></tr></table></figure>
+
+<p>输入ps-ef|grep redis查看启动状况</p>
+<p><img src="https://s2.ax1x.com/2019/12/04/QQLYmd.png" alt="QQLYmd.png"></p>
+<h3 id="创建集群"><a href="#创建集群" class="headerlink" title="创建集群"></a>创建集群</h3><p>执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/redis-5.0.0/src/redis-cli --cluster create 192.168.0.31:7001 192.168.0.31:7002 192.168.0.31:7003 192.168.0.31:7004 192.168.0.31:7005 192.168.0.31:7006 --cluster-replicas 1</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://s2.ax1x.com/2019/12/04/QQL6mj.png" alt="QQL6mj.png"></p>
+<p>检查是否成功：<br>./redis-cli -c -p 7001 </p>
+<p><strong>注意要输入-c(表示集群模式)</strong></p>
+<p>然后执行cluster nodes显示如图则表示集群部署成功</p>
+<p><img src="https://s2.ax1x.com/2019/12/04/QQLIcF.png" alt="QQLIcF.png"></p>
 
       
     </div>
@@ -378,8 +375,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/29/rpc-demo/" rel="next" title="手写RPC框架">
-                <i class="fa fa-chevron-left"></i> 手写RPC框架
+              <a href="/2019/12/05/redis/introduction/" rel="next" title="Redis简介">
+                <i class="fa fa-chevron-left"></i> Redis简介
               </a>
             
           </div>
@@ -387,10 +384,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/09/13/distribution/transcation/" rel="prev" title="分布式事务">
-                分布式事务 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -515,7 +508,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本思想"><span class="nav-number">1.</span> <span class="nav-text">基本思想</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实现"><span class="nav-number">2.</span> <span class="nav-text">代码实现</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境"><span class="nav-number">1.</span> <span class="nav-text">环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署"><span class="nav-number">2.</span> <span class="nav-text">部署</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#下载Redis"><span class="nav-number">2.1.</span> <span class="nav-text">下载Redis</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#配置"><span class="nav-number">2.2.</span> <span class="nav-text">配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改配置文件"><span class="nav-number">2.3.</span> <span class="nav-text">修改配置文件</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动"><span class="nav-number">3.</span> <span class="nav-text">启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建集群"><span class="nav-number">4.</span> <span class="nav-text">创建集群</span></a></li></ol></div>
             
 
           </div>
