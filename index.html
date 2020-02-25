@@ -321,8 +321,7 @@
 
       
         
-          
-            <h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>  线程池就是提前创建若干个线程，如果有任务需要处理，线程池里的线程就会处理任务，处理完之后线程并不会被销毁，而是等待下一个任务。</p>
+          <h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>  线程池就是提前创建若干个线程，如果有任务需要处理，线程池里的线程就会处理任务，处理完之后线程并不会被销毁，而是等待下一个任务。</p>
 <h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
 <li>避免线程的创建和销毁带来的性能开销</li>
 <li>避免大量的线程间因互相抢占资源导致的阻塞</li>
@@ -348,22 +347,13 @@
 </ul>
 </li>
 </ul>
-<h4 id="handler-拒绝策略"><a href="#handler-拒绝策略" class="headerlink" title="handler 拒绝策略"></a>handler 拒绝策略</h4><ul>
-<li><p>CallerRunsPolicy</p>
-<p> 该策略下，在调用者线程中直接执行被拒绝任务的run方法</p>
-</li>
-<li><p>AbortPolicy</p>
-<p>该策略下，直接抛弃任务，并抛出RejectedExecutionException异常</p>
-</li>
-<li><p>DiscardPolicy</p>
-<p>该策略下，直接抛弃任务，什么都不做</p>
-</li>
-<li><p>DiscardOldestPolicy</p>
-<p>该策略下，抛弃进入队列最早的那个任务，然后尝试把这次拒绝的任务放入队列</p>
-</li>
-</ul>
-
-          
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/02/25/concurrent/executor/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>

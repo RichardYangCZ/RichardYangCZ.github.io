@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="技术博客">
 <meta property="og:description" content="定义  线程池就是提前创建若干个线程，如果有任务需要处理，线程池里的线程就会处理任务，处理完之后线程并不会被销毁，而是等待下一个任务。 优点 避免线程的创建和销毁带来的性能开销 避免大量的线程间因互相抢占资源导致的阻塞 能够对线程进行简单的管理  线程池的核心参数CorePoolSize  线程池中会维护一个最小的线程数量，即使这些线程处理空闲状态也不会被销毁 maximumPoolSize">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-02-25T09:54:51.806Z">
+<meta property="og:updated_time" content="2020-02-25T09:59:33.776Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="线程池">
 <meta name="twitter:description" content="定义  线程池就是提前创建若干个线程，如果有任务需要处理，线程池里的线程就会处理任务，处理完之后线程并不会被销毁，而是等待下一个任务。 优点 避免线程的创建和销毁带来的性能开销 避免大量的线程间因互相抢占资源导致的阻塞 能够对线程进行简单的管理  线程池的核心参数CorePoolSize  线程池中会维护一个最小的线程数量，即使这些线程处理空闲状态也不会被销毁 maximumPoolSize">
@@ -347,6 +347,8 @@
 </ul>
 </li>
 </ul>
+<a id="more"></a>
+
 <h4 id="handler-拒绝策略"><a href="#handler-拒绝策略" class="headerlink" title="handler 拒绝策略"></a>handler 拒绝策略</h4><ul>
 <li><p>CallerRunsPolicy</p>
 <p> 该策略下，在调用者线程中直接执行被拒绝任务的run方法</p>
